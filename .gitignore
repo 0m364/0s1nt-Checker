@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Runtime/cache/output
+cache/
+data/
+reports/
+logs/
+*.log
+
+# Local secrets
+secrets/
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

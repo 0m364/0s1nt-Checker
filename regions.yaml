@@ -1,0 +1,18 @@
+US:
+  enabled: true
+  sources:
+    fbi_most_wanted: true
+    ofac_sdn: true
+    interpol_red_notices: true
+  consent_required: true
+  allowed_identifiers: [name, dob, address, email, phone]
+EU:
+  enabled: false
+  sources: {}
+  consent_required: true
+  data_minimization: true
+  gdpr_notice_required: true
+UK:
+  enabled: false
+  sources: {}
+  consent_required: true

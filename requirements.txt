@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+jinja2
+typer
+sqlalchemy
+psycopg2-binary
+requests
+pyyaml
+weasyprint
+openpyxl
+rq
+redis
+passlib[bcrypt]
+cryptography

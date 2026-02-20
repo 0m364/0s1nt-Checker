@@ -1,0 +1,28 @@
+sources:
+  fbi_most_wanted: true
+  ofac_sdn: true
+  interpol_red_notices: true
+  nsopw: false
+  state_police: false
+  public_dockets: false
+  adverse_media: false
+  public_social: false
+
+run:
+  require_review_score_over: 1
+  min_confidence_for_auto_score: "B"
+  cache_ttl_seconds: 86400
+
+retention:
+  days_to_keep: 365
+  allow_hard_delete: false
+
+email:
+  enabled: false
+  smtp_host: "smtp.example.com"
+  smtp_port: 587
+  smtp_user: "alerts@example.com"
+  smtp_password: "CHANGE_ME"
+  from_address: "alerts@example.com"
+  to_addresses:
+    - "security-team@example.com"
