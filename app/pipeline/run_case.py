@@ -7,14 +7,29 @@ from app.normalization.dedup import dedup_evidence
 from app.normalization.conflicts import detect_conflicts
 from app import models
 from app.db import SessionLocal
-
+from app.schemas import PersonSearch
 
 def run_case_pipeline(_, case_id: str):
     db = SessionLocal()
     try:
         case = db.query(models.Case).get(case_id)
-        person = db.query(models.Person).get(case.person_id)
+        if not case:
+            return
 
+        person = db.query(models.Person).get(case.person_id)
+        if not person:
+            return
+
+        person_search = PersonSearch(
+            full_name=person.full_name,
+            dob=str(person.dob) if person.dob else None,
+            address=person.address,
+            email=person.email,
+            phone=person.phone
+        )
+
+        # Keep person_dict for scoring logic if needed, or update scoring logic too.
+        # compute_match_tier(person_dict, rec) uses person_dict.
         person_dict = {
             "full_name": person.full_name,
             "dob": person.dob,
@@ -26,11 +41,16 @@ def run_case_pipeline(_, case_id: str):
         evidence_list = []
 
         for connector in get_all_connectors():
-            results = connector.search(person_dict)
-            results = [normalize_evidence(r) for r in results]
-            results = dedup_evidence(results)
+            # Connector returns List[SearchResult]
+            search_results = connector.search(person_search)
 
-            for rec in results:
+            # Convert to dict for existing pipeline logic
+            results_dicts = [r.model_dump() for r in search_results]
+
+            normalized_results = [normalize_evidence(r) for r in results_dicts]
+            deduped_results = dedup_evidence(normalized_results)
+
+            for rec in deduped_results:
                 e = models.Evidence(
                     case_id=case_id,
                     source_name=rec["source_name"],

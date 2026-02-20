@@ -12,3 +12,7 @@ rq
 redis
 passlib[bcrypt]
 cryptography
+pytest
+httpx
+structlog
+pydantic-settings

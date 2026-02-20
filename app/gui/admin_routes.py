@@ -92,11 +92,9 @@ def export_access_logs_csv(db: Session = Depends(get_db), user=Depends(get_curre
     require_role(user, ["admin"])
     logs = db.query(models.AccessLog).order_by(models.AccessLog.created_at.desc()).all()
     def stream():
-        yield "user_id,route,method,status_code,created_at
-"
+        yield "user_id,route,method,status_code,created_at\n"
         for l in logs:
-            yield f"{l.user_id},{l.route},{l.method},{l.status_code},{l.created_at}
-"
+            yield f"{l.user_id},{l.route},{l.method},{l.status_code},{l.created_at}\n"
     return StreamingResponse(stream(), media_type="text/csv")
 
 @router.get("/admin/audit/export/json")
