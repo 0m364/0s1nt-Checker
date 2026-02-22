@@ -32,6 +32,14 @@ class EmailConfig(BaseModel):
     from_address: str = "alerts@example.com"
     to_addresses: List[str] = ["security-team@example.com"]
 
+class AIConfig(BaseModel):
+    enabled: bool = False
+    provider: str = "openai"
+    openai_api_key: Optional[str] = None
+    gemini_api_key: Optional[str] = None
+    openai_model: str = "gpt-4o"
+    gemini_model: str = "gemini-1.5-pro"
+
 class Settings(BaseSettings):
     # App Settings
     PROJECT_NAME: str = "OSINT Threat Scanner"
@@ -46,6 +54,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     retention: RetentionConfig = RetentionConfig()
     email: EmailConfig = EmailConfig()
+    ai: AIConfig = AIConfig()
 
     model_config = SettingsConfigDict(
         env_file=".env",
