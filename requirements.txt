@@ -16,3 +16,5 @@ pytest
 httpx
 structlog
 pydantic-settings
+openai
+google-generativeai

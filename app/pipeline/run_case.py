@@ -8,6 +8,8 @@ from app.normalization.conflicts import detect_conflicts
 from app import models
 from app.db import SessionLocal
 from app.schemas import PersonSearch
+from app.services.ai import AIService
+from app.core.config import settings
 
 def run_case_pipeline(_, case_id: str):
     db = SessionLocal()
@@ -89,9 +91,39 @@ def run_case_pipeline(_, case_id: str):
         )
         db.add(score)
 
-        evidence_db = db.query(models.Match).filter_by(case_id=case_id).all()
-        explain = build_explainability(score_data, evidence_db)
-        conflicts = detect_conflicts(evidence_db)
+        evidence_matches = db.query(models.Match, models.Evidence)\
+            .join(models.Evidence, models.Match.evidence_id == models.Evidence.id)\
+            .filter(models.Match.case_id == case_id)\
+            .all()
+
+        # Prepare evidence list for explainability
+        evidence_data = []
+        for m, e in evidence_matches:
+            evidence_data.append({
+                "source_name": e.source_name,
+                "source_type": e.source_type,
+                "match_tier": m.match_tier,
+                "confidence_score": m.confidence_score,
+                "match_notes": m.match_notes
+            })
+
+        explain = build_explainability(score_data, evidence_data)
+
+        # Use AI for summary if enabled
+        if settings.ai.enabled:
+            ai_service = AIService()
+            ai_summary = ai_service.generate_explanation(score_data, evidence_data)
+            if ai_summary:
+                explain["summary"] = ai_summary
+
+        # Helper class for compatibility with detect_conflicts
+        class ConflictEvidence:
+            def __init__(self, match, evidence):
+                self.match_tier = match.match_tier
+                self.raw_json = evidence.raw_json
+
+        conflict_objs = [ConflictEvidence(m, e) for m, e in evidence_matches]
+        conflicts = detect_conflicts(conflict_objs)
         exp = models.Explainability(
             case_id=case_id,
             summary=explain["summary"],
