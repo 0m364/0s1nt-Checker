@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Case Details: {{ case.id }}</h1>
+<p><strong>Status:</strong> {{ case.status }}</p>
+<p><strong>Person:</strong> {{ person.full_name }} ({{ person.address }})</p>
+
+{% if score %}
+<h2>Score: {{ score.computed_score }} (Tier: {{ score.confidence_tier }})</h2>
+{% endif %}
+
+<h2>Evidence</h2>
+<table>
+    <tr>
+        <th>Source</th>
+        <th>Type</th>
+        <th>Record ID</th>
+        <th>Match Tier</th>
+        <th>Confidence</th>
+        <th>Link</th>
+    </tr>
+    {% for ev in evidence %}
+    <tr>
+        <td>{{ ev.source_name }}</td>
+        <td>{{ ev.source_type }}</td>
+        <td>{{ ev.record_id }}</td>
+        <td>{{ ev.match_tier }}</td>
+        <td>{{ ev.confidence_score }}</td>
+        <td>
+            {% if ev.evidence_url %}
+                <a class="btn" href="{{ ev.evidence_url }}" target="_blank">View Evidence</a>
+            {% endif %}
+
+            {% if ev.source_name == "CIA World Factbook & Area Intelligence" %}
+                <button class="btn popup-btn" onclick="document.getElementById('cia-popup-{{ loop.index }}').style.display='block'; document.getElementById('cia-overlay-{{ loop.index }}').style.display='block'">View Factbook</button>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% for ev in evidence %}
+    {% if ev.source_name == "CIA World Factbook & Area Intelligence" %}
+    <div class="popup-overlay" id="cia-overlay-{{ loop.index }}" onclick="document.getElementById('cia-popup-{{ loop.index }}').style.display='none'; this.style.display='none'"></div>
+    <div class="popup" id="cia-popup-{{ loop.index }}">
+        <span class="popup-close" onclick="document.getElementById('cia-popup-{{ loop.index }}').style.display='none'; document.getElementById('cia-overlay-{{ loop.index }}').style.display='none'">X</span>
+        <h2>CIA World Factbook: {{ ev.raw_json.title if ev.raw_json else ev.record_id }}</h2>
+        <div id="cia-content-{{ loop.index }}">
+            {% if ev.raw_json %}
+                {% if ev.raw_json.image_url %}
+                <img src="{{ ev.raw_json.image_url }}" alt="Image of {{ ev.record_id }}" style="max-width: 100%; height: auto; display: block; margin: 10px auto;">
+                {% endif %}
+                <p>{{ ev.raw_json.summary }}</p>
+            {% else %}
+                <p>No summary data available.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+
+{% if report %}
+<h2>Reports</h2>
+<ul>
+    <li><a href="/api/cases/{{ case.id }}/download/pdf" target="_blank">Download PDF</a></li>
+    <li><a href="/api/cases/{{ case.id }}/download/xlsx" target="_blank">Download Excel</a></li>
+</ul>
+{% endif %}
+
+{% endblock %}

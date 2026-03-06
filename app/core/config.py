@@ -6,6 +6,7 @@ import yaml
 
 class SourcesConfig(BaseModel):
     fbi_most_wanted: bool = True
+    cia_factbook: bool = True
     ofac_sdn: bool = True
     interpol_red_notices: bool = True
     nsopw: bool = False

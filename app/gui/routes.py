@@ -33,6 +33,7 @@ def case_detail(case_id: str, request: Request, db: Session = Depends(get_db)):
             "source_type": e.source_type,
             "evidence_url": e.evidence_url,
             "record_id": e.record_id,
+            "raw_json": e.raw_json,
             "match_tier": m.match_tier,
             "confidence_score": float(m.confidence_score)
         })
@@ -67,6 +68,7 @@ def review_page(case_id: str, request: Request, db: Session = Depends(get_db)):
             "source_type": e.source_type,
             "evidence_url": e.evidence_url,
             "record_id": e.record_id,
+            "raw_json": e.raw_json,
             "match_tier": m.match_tier,
             "confidence_score": float(m.confidence_score)
         })
