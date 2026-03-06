@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Timeline for {{ case.id }}</h1>
+<ul>
+{% for event in events %}
+    <li>{{ event.created_at }}: {{ event.event_type }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
