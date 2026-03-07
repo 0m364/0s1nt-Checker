@@ -77,5 +77,16 @@ DEBUG=True
     python app/cli/cli.py run-case --id <case_id>
     python app/cli/cli.py export-case --id <case_id>
 
+## Legal Disclaimer & Indemnification
+
+This software is intended for educational, research, and authorized security auditing purposes only. The developers of this tool ("the Authors") are not responsible for any misuse or damage caused by this software.
+
+By using this software, you agree to the following terms:
+
+1.  **Authorized Use Only**: You will only use this software on systems and networks for which you have explicit authorization.
+2.  **No Liability**: The Authors are not liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+3.  **Indemnification**: You agree to indemnify, defend, and hold harmless the Authors from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys' fees) that such parties may incur as a result of or arising from your (or anyone using your account's) violation of these terms or your use of the software.
+
 ## License
-Internal / Restricted use only.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
